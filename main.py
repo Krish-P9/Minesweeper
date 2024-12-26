@@ -34,7 +34,8 @@ def main():
     #Dependent on difficulty set
     tile_size = difficulty[1]
     size = difficulty[2]
-    matrix = np.full((size, size), "H_", dtype = str)
+    matrix = np.full((size, size), "H_")
+    print(matrix)
     # max_x = difficulty[3]
     # max_y = difficulty[3]
     mine_num = difficulty[3]
@@ -95,7 +96,7 @@ def main():
             miney = val % size #y value of mine going to be placed
             minex_pos = minex * tile_size + 19
             miney_pos = miney * tile_size + 81
-            if matrix[minex, miney] != "H_":
+            if matrix[minex, miney] != "HM":
                 matrix[minex, miney] = "HM"
                 screen.blit(mine, (minex_pos, miney_pos))
                 count += 1
@@ -124,22 +125,50 @@ def main():
                 if matrix[row, col] == "HM": #mine found at position
                     continue
 
-                if top & (matrix[row - 1, col] == "HM"): #check above
+                if not(top): pass #checks if position above doenst exist
+                elif(matrix[row - 1, col] == "HM"): #check above for mine
                     number += 1
-                if (top & right) & (matrix[row - 1, col + 1] == "HM"): # check top right
+                if not(top & right): pass
+                elif (matrix[row - 1, col + 1] == "HM"): # check top right
                     number += 1
-                if right & (matrix[row, col + 1] == "HM"): #check right
+                if not(right): pass
+                elif (matrix[row, col + 1] == "HM"): #check right
                     number += 1
-                if (bottom & right) & (matrix[row + 1, col + 1] == "HM"): #check bottom right
+                if not(bottom & right): pass
+                elif (matrix[row + 1, col + 1] == "HM"): #check bottom right
                     number += 1
-                if bottom & (matrix[row + 1, col] == "HM"): #check below
+                if not(bottom): pass
+                elif (matrix[row + 1, col] == "HM"): #check below
                     number += 1
-                if (bottom & left) & (matrix[row + 1, col - 1] == "HM"): # check bottom left
+                if not(bottom & left): pass
+                elif (matrix[row + 1, col - 1] == "HM"): # check bottom left
                     number += 1
-                if left & (matrix[row, col - 1] == "HM"): #check left
+                if not(left): pass
+                elif (matrix[row, col - 1] == "HM"): #check left
                     number += 1
-                if (top & left) & (matrix[row - 1, col - 1] == "HM"): #check top left
+                if not(top & left): pass
+                elif (matrix[row - 1, col - 1] == "HM"): #check top left
                     number += 1
+
+                #position of icon
+                numx_pos = row * tile_size + 19
+                numy_pos = col * tile_size + 81
+
+                #check which number icon to use
+                match number:
+                    case 0: continue
+                    case 1: screen.blit(one, (numx_pos, numy_pos))
+                    case 2: screen.blit(two, (numx_pos, numy_pos))
+                    case 3: screen.blit(three, (numx_pos, numy_pos))
+                    case 4: screen.blit(four, (numx_pos, numy_pos))
+                    case 5: screen.blit(five, (numx_pos, numy_pos))
+                    case 6: screen.blit(six, (numx_pos, numy_pos))
+                    case 7: screen.blit(seven, (numx_pos, numy_pos))
+                    case 8: screen.blit(eight, (numx_pos, numy_pos))
+
+
+                
+
 
                 
 
