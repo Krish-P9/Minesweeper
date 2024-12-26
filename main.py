@@ -25,19 +25,17 @@ def main():
     #difficulty = ["Easy", 96, 9, 8, 10]
     #...
 
-    easy_tile_size = 96
-    normal_tile_size = 54
-    hard_tile_size = 27
+    easy_tile_size = 96, 9, 10
+    normal_tile_size = 54, 16, 40
+    hard_tile_size = 27, 32, 150
 
     difficulty = ["Easy", 96, 9, 10] #stores values for certain difficulty, ["difficulty", tile_size, size of matrix, max x and y value, number of mines]
+    # difficulty = ["Hard", 27, 32, 150]
 
     #Dependent on difficulty set
     tile_size = difficulty[1]
     size = difficulty[2]
     matrix = np.full((size, size), "H_")
-    print(matrix)
-    # max_x = difficulty[3]
-    # max_y = difficulty[3]
     mine_num = difficulty[3]
 
     # tile_size = easy_tile_size #tile size set to easy for now 
@@ -96,8 +94,8 @@ def main():
             miney = val % size #y value of mine going to be placed
             minex_pos = minex * tile_size + 19
             miney_pos = miney * tile_size + 81
-            if matrix[minex, miney] != "HM":
-                matrix[minex, miney] = "HM"
+            if matrix[miney, minex] != "HM":
+                matrix[miney, minex] = "HM"
                 screen.blit(mine, (minex_pos, miney_pos))
                 count += 1
 
@@ -122,80 +120,107 @@ def main():
                 if (col + 1) < (size):
                     right = True
 
-                if matrix[row, col] == "HM": #mine found at position
+                if matrix[col, row] == "HM": #mine found at position
                     continue
 
                 if not(top): pass #checks if position above doenst exist
-                elif(matrix[row - 1, col] == "HM"): #check above for mine
+                elif(matrix[col, row - 1] == "HM"): #check above for mine
                     number += 1
                 if not(top & right): pass
-                elif (matrix[row - 1, col + 1] == "HM"): # check top right
+                elif (matrix[col + 1, row - 1] == "HM"): # check top right
                     number += 1
                 if not(right): pass
-                elif (matrix[row, col + 1] == "HM"): #check right
+                elif (matrix[col + 1, row] == "HM"): #check right
                     number += 1
                 if not(bottom & right): pass
-                elif (matrix[row + 1, col + 1] == "HM"): #check bottom right
+                elif (matrix[col + 1, row + 1] == "HM"): #check bottom right
                     number += 1
                 if not(bottom): pass
-                elif (matrix[row + 1, col] == "HM"): #check below
+                elif (matrix[col, row + 1] == "HM"): #check below
                     number += 1
                 if not(bottom & left): pass
-                elif (matrix[row + 1, col - 1] == "HM"): # check bottom left
+                elif (matrix[col - 1, row + 1] == "HM"): # check bottom left
                     number += 1
                 if not(left): pass
-                elif (matrix[row, col - 1] == "HM"): #check left
+                elif (matrix[col - 1, row] == "HM"): #check left
                     number += 1
                 if not(top & left): pass
-                elif (matrix[row - 1, col - 1] == "HM"): #check top left
+                elif (matrix[col - 1, row - 1] == "HM"): #check top left
                     number += 1
 
-                #position of icon
-                numx_pos = row * tile_size + 19
-                numy_pos = col * tile_size + 81
+                #position of icon #delete
+                numx_pos = col * tile_size + 81
+                numy_pos = row * tile_size + 19
 
-                #check which number icon to use
-                match number:
-                    case 0: continue
-                    case 1: screen.blit(one, (numx_pos, numy_pos))
-                    case 2: screen.blit(two, (numx_pos, numy_pos))
-                    case 3: screen.blit(three, (numx_pos, numy_pos))
-                    case 4: screen.blit(four, (numx_pos, numy_pos))
-                    case 5: screen.blit(five, (numx_pos, numy_pos))
-                    case 6: screen.blit(six, (numx_pos, numy_pos))
-                    case 7: screen.blit(seven, (numx_pos, numy_pos))
-                    case 8: screen.blit(eight, (numx_pos, numy_pos))
+                matrix[col, row] = "H" + str(number)
 
 
-                
-
-
-                
-
-                
-
-
-
-
+        print(matrix)
 
 
     '''Left Click'''
     def left_click(coord):
-
-        #create variable valid to see if click is valid
 
         xcoord = (coord[0] - 18) // tile_size #x coordinate of the tile clicked
         ycoord = (coord[1] - 80) // tile_size #y coordinate of the tile clicked
         xpos = xcoord * tile_size + 19 #x position
         ypos = ycoord * tile_size + 81 #y position
 
+        state = matrix[ycoord, xcoord] #gets state of the tile
+        first_char = state[0] #stores value of first letter, shows if tile is hidden, revealed or flagged
+        second_char = state[1] #stores the second character
+
         if not(0 <= xcoord < size) or (not(0 <= ycoord < size)): #checks if the coordinate of the click is on the board
             pass
-        elif matrix[xcoord, ycoord] == 'H':
-            matrix[xcoord, ycoord] = "R"
-            pygame.draw.rect(screen, (revealed_color), (xpos, ypos, (tile_size - 1), (tile_size - 1)))
+        elif first_char == 'H': #if tile is hidden, turn it to revealed
+            first_char = "R"
+            pygame.draw.rect(screen, (revealed_color), (xpos, ypos, (tile_size - 1), (tile_size - 1))) #changes tile color to revealed
+            reveal(xpos, ypos, second_char) #calls reveal() which insertes image if needed
+            state = first_char + second_char
+            matrix[ycoord, xcoord] = state #updates matrix
+            print(matrix) #delete
 
-            print("Revealed")
+    '''Right Click'''
+    def right_click(coord):
+
+        xcoord = (coord[0] - 18) // tile_size #x coordinate of the tile clicked
+        ycoord = (coord[1] - 80) // tile_size #y coordinate of the tile clicked
+        xpos = xcoord * tile_size + 19 #x position
+        ypos = ycoord * tile_size + 81 #y position
+
+        state = matrix[ycoord, xcoord] #gets state of the tile
+        first_char = state[0] #stores value of first letter, shows if tile is hidden, revealed or flagged
+        second_char = state[1] #stores the second character
+
+        #checks if the tile is hidden, then flags it, or if it flagged, then unflags it
+        if first_char == "H": 
+            first_char = "F"
+            screen.blit(flag, (xpos, ypos))
+        elif first_char == "F":
+            first_char = "H"
+            pygame.draw.rect(screen, (hidden_color), (xpos, ypos, (tile_size - 1), (tile_size - 1)))
+
+        state = first_char + second_char
+        matrix[ycoord, xcoord] = state #updates matrix 
+        print(matrix) # delete
+
+
+    '''Reveals what the tile is when clicked'''
+    def reveal(xpos, ypos, second_char):
+
+        match second_char:
+            case '_': pass
+            case 'M': 
+                screen.blit(mine, (xpos, ypos))
+                print("Game Over")
+            case '1': screen.blit(one, (xpos, ypos))
+            case '2': screen.blit(two, (xpos, ypos))
+            case '3': screen.blit(three, (xpos, ypos))
+            case '4': screen.blit(four, (xpos, ypos))
+            case '5': screen.blit(five, (xpos, ypos))
+            case '6': screen.blit(six, (xpos, ypos))
+            case '7': screen.blit(seven, (xpos, ypos))
+            case '8': screen.blit(eight, (xpos, ypos))
         
 
     #populate_board() actually goes here
@@ -209,7 +234,7 @@ def main():
     ''' Loop '''
     run = True
     while run:
-
+        #delete
         # screen.fill((250, 250, 250)) #background color white
         # pygame.draw.rect(screen, hidden_color, board) #draw board
         # pygame.draw.rect(screen, BLACK, border, width = 5) #draw border
@@ -219,15 +244,15 @@ def main():
         for event in pygame.event.get():
             # Checks if left or right button on mouse clicked and calls respective function
             if pygame.mouse.get_pressed()[0]: #left click
-                print("left click") #delete
+                # print("left click") #delete
                 # print(str(pygame.mouse.get_pos())) #delete
                 coord = pygame.mouse.get_pos()
                 left_click(coord)
             elif pygame.mouse.get_pressed()[2]: #right click
-                print("right click") # delete
+                # print("right click") # delete
                 # print(str(pygame.mouse.get_pos())) # delete
                 coord = pygame.mouse.get_pos()
-                #call right click function
+                right_click(coord)
 
             if event.type == pygame.QUIT: #Exits window
                 run = False

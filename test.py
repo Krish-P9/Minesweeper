@@ -119,6 +119,7 @@ Created December 2024
 #     main()
 
 
+word = "hi"
+word1 = word[0]
 
-for x in range (8):
-    print(x)
+print(word1)
