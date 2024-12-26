@@ -48,17 +48,29 @@ def main():
     hidden_color = (160, 160, 160) #color for hidden tiles
     revealed_color = (96, 96, 96) #color for revealed tiles
     BLACK = (0, 0, 0) #black as RGB
-    mine = pygame.image.load("icons/Mine.png").convert_alpha()
-    mine2 = pygame.transform.scale(mine, (tile_size, tile_size))
-    flag = pygame.image.load("icons/Flag.png").convert_alpha()
-    one = pygame.image.load("icons/1.png").convert_alpha()
-    two = pygame.image.load("icons/2.png").convert_alpha()
-    three = pygame.image.load("icons/3.png").convert_alpha()
-    four = pygame.image.load("icons/4.png").convert_alpha()
-    five = pygame.image.load("icons/5.png").convert_alpha()
-    six = pygame.image.load("icons/6.png").convert_alpha()
-    seven = pygame.image.load("icons/7.png").convert_alpha()
-    eight = pygame.image.load("icons/8.png").convert_alpha()
+    #images not scaled
+    not_scaled_mine = pygame.image.load("icons/Mine.png").convert_alpha()
+    not_scaled_flag = pygame.image.load("icons/Flag.png").convert_alpha()
+    not_scaled_one = pygame.image.load("icons/1.png").convert_alpha()
+    not_scaled_two = pygame.image.load("icons/2.png").convert_alpha()
+    not_scaled_three = pygame.image.load("icons/3.png").convert_alpha()
+    not_scaled_four = pygame.image.load("icons/4.png").convert_alpha()
+    not_scaled_five = pygame.image.load("icons/5.png").convert_alpha()
+    not_scaled_six = pygame.image.load("icons/6.png").convert_alpha()
+    not_scaled_seven = pygame.image.load("icons/7.png").convert_alpha()
+    not_scaled_eight = pygame.image.load("icons/8.png").convert_alpha()
+    #images scaled to appropriate size
+    mine = pygame.transform.scale(not_scaled_mine, (tile_size, tile_size))
+    flag = pygame.transform.scale(not_scaled_flag, (tile_size, tile_size))
+    one = pygame.transform.scale(not_scaled_one, (tile_size, tile_size))
+    two = pygame.transform.scale(not_scaled_two, (tile_size, tile_size))
+    three = pygame.transform.scale(not_scaled_three, (tile_size, tile_size))
+    four = pygame.transform.scale(not_scaled_four, (tile_size, tile_size))
+    five = pygame.transform.scale(not_scaled_five, (tile_size, tile_size))
+    six = pygame.transform.scale(not_scaled_six, (tile_size, tile_size))
+    seven = pygame.transform.scale(not_scaled_seven, (tile_size, tile_size))
+    eight = pygame.transform.scale(not_scaled_eight, (tile_size, tile_size))
+
 
     '''Draws lines for grid'''
     def draw_grid(tile_size):
@@ -73,7 +85,7 @@ def main():
 
     '''Populates board with mines and appropriate numbers'''
     def populate_board():
-        
+        '''Mines'''
         count = 0 #number of mines already on board
 
         #loop to randomly place the mines on the board
@@ -85,8 +97,11 @@ def main():
             miney_pos = miney * tile_size + 81
             if matrix[minex, miney] != "H_":
                 matrix[minex, miney] = "HM"
-                screen.blit(mine2, (minex_pos, miney_pos))
+                screen.blit(mine, (minex_pos, miney_pos))
                 count += 1
+
+        '''Numbers'''
+
 
 
     '''Left Click'''
