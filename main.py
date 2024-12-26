@@ -29,15 +29,15 @@ def main():
     normal_tile_size = 54
     hard_tile_size = 27
 
-    difficulty = ["Easy", 96, 9, 8, 10] #stores values for certain difficulty, ["difficulty", tile_size, size of matrix, max x and y value, number of mines]
+    difficulty = ["Easy", 96, 9, 10] #stores values for certain difficulty, ["difficulty", tile_size, size of matrix, max x and y value, number of mines]
 
     #Dependent on difficulty set
     tile_size = difficulty[1]
     size = difficulty[2]
     matrix = np.full((size, size), "H_", dtype = str)
-    max_x = difficulty[3]
-    max_y = difficulty[3]
-    mine_num = difficulty[4]
+    # max_x = difficulty[3]
+    # max_y = difficulty[3]
+    mine_num = difficulty[3]
 
     # tile_size = easy_tile_size #tile size set to easy for now 
     # matrix = np.full((9,9), 'H', dtype = str) #matrix that represents the state of the game, size for easy mode for now
@@ -102,6 +102,52 @@ def main():
 
         '''Numbers'''
 
+        for row in range(size):
+            for col in range(size):
+
+                number = 0
+                top = False
+                bottom = False
+                right = False
+                left = False
+
+                #checks if tile around position exists
+                if 0 <= (row - 1):
+                    top = True
+                if 0 <= (col - 1):
+                    left = True
+                if (row + 1) < size:
+                    bottom = True
+                if (col + 1) < (size):
+                    right = True
+
+                if matrix[row, col] == "HM": #mine found at position
+                    continue
+
+                if top & (matrix[row - 1, col] == "HM"): #check above
+                    number += 1
+                if (top & right) & (matrix[row - 1, col + 1] == "HM"): # check top right
+                    number += 1
+                if right & (matrix[row, col + 1] == "HM"): #check right
+                    number += 1
+                if (bottom & right) & (matrix[row + 1, col + 1] == "HM"): #check bottom right
+                    number += 1
+                if bottom & (matrix[row + 1, col] == "HM"): #check below
+                    number += 1
+                if (bottom & left) & (matrix[row + 1, col - 1] == "HM"): # check bottom left
+                    number += 1
+                if left & (matrix[row, col - 1] == "HM"): #check left
+                    number += 1
+                if (top & left) & (matrix[row - 1, col - 1] == "HM"): #check top left
+                    number += 1
+
+                
+
+                
+
+
+
+
 
 
     '''Left Click'''
@@ -114,7 +160,7 @@ def main():
         xpos = xcoord * tile_size + 19 #x position
         ypos = ycoord * tile_size + 81 #y position
 
-        if not(0 <= xcoord <= max_x) or (not(0 <= ycoord <= max_y)): #checks if the coordinate of the click is on the board
+        if not(0 <= xcoord < size) or (not(0 <= ycoord < size)): #checks if the coordinate of the click is on the board
             pass
         elif matrix[xcoord, ycoord] == 'H':
             matrix[xcoord, ycoord] = "R"
