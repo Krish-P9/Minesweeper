@@ -20,6 +20,8 @@ def main():
 
     board = pygame.Rect((18, 80, 864, 864)) #board for the game
     border = pygame.Rect((13, 75, 874, 874)) #border for game
+    win = 0 #game is running
+    # clock = pygame.time.Clock() #delete
 
     #switch case to check which difficulty chosen, then set the values for difficulty
     #difficulty = ["Easy", 96, 9, 8, 10]
@@ -38,15 +40,13 @@ def main():
     matrix = np.full((size, size), "H_")
     mine_num = difficulty[3]
 
-    # tile_size = easy_tile_size #tile size set to easy for now 
-    # matrix = np.full((9,9), 'H', dtype = str) #matrix that represents the state of the game, size for easy mode for now
-    # max_x = 8
-    # max_y = 8 #max x and y value for coordinate of tiles, set to easy for now
-
-    '''Color and Icon Variables'''
+    '''Constant Variables'''
     hidden_color = (160, 160, 160) #color for hidden tiles
     revealed_color = (96, 96, 96) #color for revealed tiles
     BLACK = (0, 0, 0) #black as RGB
+    WHITE = (250, 250, 250) #white as RGB
+    FONT = pygame.font.SysFont('Futura', 50)
+
     #images not scaled
     not_scaled_mine = pygame.image.load("icons/Mine.png").convert_alpha()
     not_scaled_flag = pygame.image.load("icons/Flag.png").convert_alpha()
@@ -174,11 +174,11 @@ def main():
             pass
         elif first_char == 'H': #if tile is hidden, turn it to revealed
             first_char = "R"
-            pygame.draw.rect(screen, (revealed_color), (xpos, ypos, (tile_size - 1), (tile_size - 1))) #changes tile color to revealed
-            reveal(xpos, ypos, second_char) #calls reveal() which insertes image if needed
             state = first_char + second_char
             matrix[ycoord, xcoord] = state #updates matrix
             print(matrix) #delete
+            reveal(xpos, ypos, second_char, xcoord, ycoord) #calls reveal() which insertes image if needed
+            
 
     '''Right Click'''
     def right_click(coord):
@@ -206,13 +206,21 @@ def main():
 
 
     '''Reveals what the tile is when clicked'''
-    def reveal(xpos, ypos, second_char):
+    def reveal(xpos, ypos, second_char, xcoord, ycoord):
 
+        pygame.draw.rect(screen, (revealed_color), (xpos, ypos, (tile_size - 1), (tile_size - 1))) #changes tile color to revealed
+
+        #determines which image to insert based on the number under the hidden tile
         match second_char:
-            case '_': pass
+            case '0':
+                blank_tile(xcoord, ycoord)
             case 'M': 
                 screen.blit(mine, (xpos, ypos))
-                print("Game Over")
+                pygame.display.update()
+                print("Game Over") # delete
+                global win
+                win = 1
+                game_over(win)
             case '1': screen.blit(one, (xpos, ypos))
             case '2': screen.blit(two, (xpos, ypos))
             case '3': screen.blit(three, (xpos, ypos))
@@ -221,24 +229,50 @@ def main():
             case '6': screen.blit(six, (xpos, ypos))
             case '7': screen.blit(seven, (xpos, ypos))
             case '8': screen.blit(eight, (xpos, ypos))
+
+    '''Reveals surround tiles around the blank tile'''
+    def blank_tile(xcoord, ycoord):
+
+        coord_list = [(xcoord - 1, ycoord + 1), (xcoord, ycoord + 1), (xcoord + 1, ycoord + 1), (xcoord + 1, ycoord), (xcoord + 1, ycoord - 1),(xcoord, ycoord -1), (xcoord - 1, ycoord -1 ), (xcoord - 1, ycoord)]
+        print(type(coord_list))
+        for j in range(8):
+            x = coord_list[j][0]
+            y = coord_list[j][1]
+            if (0 <= x < size) & (0 <= y < size):
+                x = x * tile_size + 20
+                y = y * tile_size + 82
+                coord = (x, y)
+                left_click(coord)
+
+    def display_text(text, color, font, x, y, win):
+        if win == 0:
+            text = font.render(text, True, color)
+            screen.blit(text, (x, y))
+            
+    '''Game is over'''
+    def game_over(win):
+         
+        if win == 2: #user won the game
+            pass
+        elif win == 1: #user lost the game
+            pygame.time.delay(1000)
+            screen.fill(WHITE)
+            display_text(f'Game Over! You lose', WHITE, FONT, 500, 5)
+
+            
+
         
 
-    #populate_board() actually goes here
-    screen.fill((250, 250, 250)) #background color white
+    populate_board() #populates board with mines and numbers, doesnt actually go here
+    screen.fill(WHITE) #background color white
     pygame.draw.rect(screen, hidden_color, board) #draw board
     pygame.draw.rect(screen, BLACK, border, width = 5) #draw border
-    populate_board() #populates board with mines and numbers, doesnt actually go here
     draw_grid(tile_size) #draws lines for the grid
     
     
     ''' Loop '''
     run = True
     while run:
-        #delete
-        # screen.fill((250, 250, 250)) #background color white
-        # pygame.draw.rect(screen, hidden_color, board) #draw board
-        # pygame.draw.rect(screen, BLACK, border, width = 5) #draw border
-        # draw_grid(tile_size) #draws lines for the grid
 
         # Event Handler
         for event in pygame.event.get():
@@ -256,6 +290,11 @@ def main():
 
             if event.type == pygame.QUIT: #Exits window
                 run = False
+
+        pygame.draw.rect(screen, WHITE, (115, 15, 1000, 50))
+        time = pygame.time.get_ticks() // 1000 #gets the current time of the game
+        display_text(f'Time: {time} seconds', BLACK, FONT, 20, 20, win) #displays the time since the program started
+        
 
         pygame.display.update()
 
