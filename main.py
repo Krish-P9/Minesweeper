@@ -22,7 +22,7 @@ def main():
     border = pygame.Rect((13, 75, 874, 874)) #border for game
     win = 0 #game is running
     #clock = pygame.time.Clock() #delete
-   # FPS = 10 #delete
+    #FPS = 10 #delete
 
     #switch case to check which difficulty chosen, then set the values for difficulty
     #difficulty = ["Easy", 96, 9, 8, 10]
@@ -70,6 +70,10 @@ def main():
     six = pygame.transform.scale(not_scaled_six, (tile_size, tile_size))
     seven = pygame.transform.scale(not_scaled_seven, (tile_size, tile_size))
     eight = pygame.transform.scale(not_scaled_eight, (tile_size, tile_size))
+
+    '''Start Screen'''
+    def start_screen():
+        screen.fill(WHITE)
 
 
     '''Draws lines for grid'''
@@ -249,17 +253,6 @@ def main():
         screen.blit(text, (x, y))
             
     '''Game is over'''
-    # def game_over(win):
-         
-    #     screen.fill(WHITE)
-        
-    #     if win == True: #user won the game
-    #         pass
-    #     elif win == False: #user lost the game
-    #         pygame.time.delay(1000)
-    #         screen.fill(WHITE)
-    #         display_text(f'Game Over! You lose', WHITE, FONT, 500, 5)
-
     def game_over(win):
         
         if win == False:
@@ -281,6 +274,8 @@ def main():
     ''' Loop '''
     run = True
     while run:
+
+        start_screen()
 
         # Event Handler
         for event in pygame.event.get():
