@@ -21,7 +21,8 @@ def main():
     board = pygame.Rect((18, 80, 864, 864)) #board for the game
     border = pygame.Rect((13, 75, 874, 874)) #border for game
     win = 0 #game is running
-    # clock = pygame.time.Clock() #delete
+    #clock = pygame.time.Clock() #delete
+   # FPS = 10 #delete
 
     #switch case to check which difficulty chosen, then set the values for difficulty
     #difficulty = ["Easy", 96, 9, 8, 10]
@@ -218,9 +219,7 @@ def main():
                 screen.blit(mine, (xpos, ypos))
                 pygame.display.update()
                 print("Game Over") # delete
-                global win
-                win = 1
-                game_over(win)
+                game_over(False)
             case '1': screen.blit(one, (xpos, ypos))
             case '2': screen.blit(two, (xpos, ypos))
             case '3': screen.blit(three, (xpos, ypos))
@@ -244,20 +243,29 @@ def main():
                 coord = (x, y)
                 left_click(coord)
 
-    def display_text(text, color, font, x, y, win):
-        if win == 0:
-            text = font.render(text, True, color)
-            screen.blit(text, (x, y))
+    def display_text(text, color, font, x, y):
+        
+        text = font.render(text, True, color)
+        screen.blit(text, (x, y))
             
     '''Game is over'''
-    def game_over(win):
+    # def game_over(win):
          
-        if win == 2: #user won the game
-            pass
-        elif win == 1: #user lost the game
+    #     screen.fill(WHITE)
+        
+    #     if win == True: #user won the game
+    #         pass
+    #     elif win == False: #user lost the game
+    #         pygame.time.delay(1000)
+    #         screen.fill(WHITE)
+    #         display_text(f'Game Over! You lose', WHITE, FONT, 500, 5)
+
+    def game_over(win):
+        
+        if win == False:
             pygame.time.delay(1000)
             screen.fill(WHITE)
-            display_text(f'Game Over! You lose', WHITE, FONT, 500, 5)
+            display_text(f'Game Over! You lose', BLACK, FONT, 250, 450)
 
             
 
@@ -291,9 +299,9 @@ def main():
             if event.type == pygame.QUIT: #Exits window
                 run = False
 
-        pygame.draw.rect(screen, WHITE, (115, 15, 1000, 50))
-        time = pygame.time.get_ticks() // 1000 #gets the current time of the game
-        display_text(f'Time: {time} seconds', BLACK, FONT, 20, 20, win) #displays the time since the program started
+        # pygame.draw.rect(screen, WHITE, (115, 15, 1000, 50))
+        # time = pygame.time.get_ticks() // 1000 #gets the current time of the game
+        # display_text(f'Time: {time} seconds', BLACK, FONT, 20, 20, win) #displays the time since the program started
         
 
         pygame.display.update()
