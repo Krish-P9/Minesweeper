@@ -154,7 +154,7 @@ def main():
                     matrix[col, row] = "H" + str(number)
 
 
-            print(matrix)
+            # print(matrix)
 
 
         '''Left Click'''
@@ -175,7 +175,7 @@ def main():
                 first_char = "R"
                 state = first_char + second_char
                 matrix[ycoord, xcoord] = state #updates matrix
-                print(matrix) #delete
+                # print(matrix) #delete
                 reveal(xpos, ypos, second_char, xcoord, ycoord) #calls reveal() which insertes image if needed
 
 
@@ -201,7 +201,7 @@ def main():
 
             state = first_char + second_char
             matrix[ycoord, xcoord] = state #updates matrix 
-            print(matrix) # delete
+            # print(matrix) # delete
 
 
         '''Reveals what the tile is when clicked'''
@@ -246,13 +246,13 @@ def main():
 
             if tiles_left == 0:
                 game_over(True)
-            print(tiles_left)
+            # print(tiles_left)
 
         '''Reveals surround tiles around the blank tile'''
         def blank_tile(xcoord, ycoord):
 
             coord_list = [(xcoord - 1, ycoord + 1), (xcoord, ycoord + 1), (xcoord + 1, ycoord + 1), (xcoord + 1, ycoord), (xcoord + 1, ycoord - 1),(xcoord, ycoord -1), (xcoord - 1, ycoord -1 ), (xcoord - 1, ycoord)]
-            print(type(coord_list))
+            # print(type(coord_list))
             for j in range(8):
                 x = coord_list[j][0]
                 y = coord_list[j][1]
@@ -324,6 +324,7 @@ def main():
         title_font = pygame.font.SysFont('Consolas', 100)
         subtitle_font = pygame.font.SysFont('Consolas', 60)
         reg_font = pygame.font.SysFont('Consolas', 30)
+        difficulty_font = pygame.font.SysFont('Consolas', 40)
         title = "Minesweeper"
         subtitle = "By Krish Patel"
         easy_info = "9 x 9 grid"
@@ -332,6 +333,7 @@ def main():
         medium_info2 = "40 mines"
         hard_info = "32 x 32 grid"
         hard_info2 = "150 mines"
+        difficulty = "Choose a difficulty:"
         title = title_font.render(title, True, BLACK)
         subtitle = subtitle_font.render(subtitle, True, BLACK)
         easy_info = reg_font.render(easy_info, True, BLACK)
@@ -340,6 +342,7 @@ def main():
         medium_info2 = reg_font.render(medium_info2, True, BLACK)
         hard_info = reg_font.render(hard_info, True, BLACK)
         hard_info2 = reg_font.render(hard_info2, True, BLACK)
+        difficulty = difficulty_font.render(difficulty, True, BLACK)
         screen.blit(title, (150, 200))
         screen.blit(subtitle, (230, 330))
         screen.blit(easy_info, (70, 600))
@@ -348,6 +351,7 @@ def main():
         screen.blit(medium_info2, (380, 650))
         screen.blit(hard_info, (650, 600))
         screen.blit(hard_info2, (680, 650))
+        screen.blit(difficulty, (230, 500))
 
         '''Button Class'''
         class Button():
