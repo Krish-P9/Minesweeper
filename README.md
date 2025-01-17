@@ -1,2 +1,2 @@
 # Minesweeper
-First Personal Project Dec 2024
+A recreation of Minesweeper using Python and Pygame. Simple version of the game with 3 difficulties.
